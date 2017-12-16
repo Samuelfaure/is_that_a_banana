@@ -1,14 +1,16 @@
 <template>
   <div>
     <h1>Is that a banana ?</h1>
-    <img id="img-to-analyse" ref="toAnalyse" src="../assets/img/banana7.jpg" width=227 height=227></img>
-    <button v-on:click="executeAnalyse">So, is it ?</button>
+    <div @dragover.prevent @drop="onDrop">
+      <img id="img-to-analyse" ref="toAnalyse" :src=imageSource width=227 height=227></img>
+    </div>
+    <!-- <button v-on:click="executeAnalyse">So, is it ?</button> -->
     <result v-if="bananaResult"></result>
-    <ul>
+    <!-- <ul>
       <li v-for="(score, className) in topResults">
         <p>{{ className }} : {{ score | rounded_to_4 }}</p>
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -27,6 +29,7 @@ export default {
   data () {
     return {
       topResults: [],
+      imageSource: 'src/assets/img/banana.jpeg',
       bananaResult: ''
     }
   },
@@ -36,13 +39,13 @@ export default {
 
       const math = new NDArrayMathGPU()
       const squeezeNet = new SqueezeNet(math)
+      this.bananaResult = 'loading_lib'
       await squeezeNet.load()
 
       const image = Array3D.fromPixels(imgToAnalyse)
       const logits = squeezeNet.predict(image)
       const topResults = await squeezeNet.getTopKClasses(logits, 30)
 
-      console.log(topResults)
       for (const className in topResults) {
         console.log(`${topResults[className].toFixed(5)}: ${className}`)
       }
@@ -52,7 +55,7 @@ export default {
     isThatABanana: function () {
       const resultNames = Object.keys(this.topResults)
       const resultNamesFirst10 = resultNames.slice(0, 10)
-      console.log(resultNamesFirst10)
+
       if (resultNamesFirst10.includes('banana')) {
         this.bananaResult = 'yes_banana'
       } else if (resultNames.includes('banana')) {
@@ -60,6 +63,30 @@ export default {
       } else {
         this.bananaResult = 'no_banana'
       }
+    },
+    onDrop: function (dropZone) {
+      dropZone.stopPropagation()
+      dropZone.preventDefault()
+      const files = dropZone.dataTransfer.files
+      this.createFile(files[0])
+    },
+    onChange (dropZone) {
+      const files = dropZone.target.files
+      this.createFile(files[0])
+    },
+    createFile (file) {
+      if (!file.type.match('image.*')) {
+        alert('Select an image')
+        return
+      }
+      var reader = new FileReader()
+      var vm = this
+
+      reader.onload = function (imageDropped) {
+        vm.imageSource = imageDropped.target.result
+      }
+      reader.readAsDataURL(file)
+      this.executeAnalyse()
     }
   }
 }

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <template v-if="this.$parent.bananaResult === 'loading_lib'">
+      <h4>analyzing...</h4>
+    </template>
     <template v-if="this.$parent.bananaResult === 'yes_banana'">
       <h1>Yup. That's a banana.</h1>
       <h4>enjoy your banana.</h4>
