@@ -1,16 +1,10 @@
 <template>
   <div>
     <h1>Is that a banana ?</h1>
-    <div @dragover.prevent @drop="onDrop">
-      <img id="img-to-analyse" ref="toAnalyse" :src=imageSource width=227 height=227></img>
+    <div class="drop-zone" @dragover.prevent @drop="onDrop">
+      <img id="img-to-analyse" ref="toAnalyse" :src=imageSource></img>
     </div>
-    <!-- <button v-on:click="executeAnalyse">So, is it ?</button> -->
     <result v-if="bananaResult"></result>
-    <!-- <ul>
-      <li v-for="(score, className) in topResults">
-        <p>{{ className }} : {{ score | rounded_to_4 }}</p>
-      </li>
-    </ul> -->
   </div>
 </template>
 
@@ -29,28 +23,76 @@ export default {
   data () {
     return {
       topResults: [],
-      imageSource: 'src/assets/img/banana.jpeg',
+      imageSource: '',
       bananaResult: ''
     }
   },
   methods: {
-    executeAnalyse: async function () {
-      const imgToAnalyse = this.$refs.toAnalyse
+    onDrop: function (dropZone) {
+      dropZone.stopPropagation()
+      dropZone.preventDefault()
+      const files = dropZone.dataTransfer.files
+      this.createFile(files[0])
+      this.executeAnalyse()
+    },
+    createFile (file) {
+      if (!file.type.match('image.*')) {
+        alert('Please select an image. Preferably of banana.')
+        return
+      }
+      var reader = new FileReader()
+      var vm = this
 
+      reader.onload = function (imageDropped) {
+        vm.imageSource = imageDropped.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    executeAnalyse: async function () {
+      let imgToAnalyse = this.$refs.toAnalyse
+      const squeezeNet = await this.launchSqueezenet(imgToAnalyse)
+
+      imgToAnalyse = this.preprocess(imgToAnalyse)
+      const topResults = await this.analyzeImage(imgToAnalyse, squeezeNet)
+      imgToAnalyse = this.postprocess(imgToAnalyse)
+
+      // for (const className in topResults) {
+      //   console.log(`${topResults[className].toFixed(5)}: ${className}`)
+      // }
+
+      this.topResults = topResults
+      this.isThatABanana()
+    },
+    preprocess (imgToAnalyse) {
+      imgToAnalyse = this.resetImgFormat(imgToAnalyse)
+
+      imgToAnalyse.width = 227
+      imgToAnalyse.height = 227
+      return imgToAnalyse
+    },
+    resetImgFormat (imgToAnalyse) {
+      imgToAnalyse.oldWidth = imgToAnalyse.naturalWidth
+      imgToAnalyse.oldHeight = imgToAnalyse.naturalHeight
+      return imgToAnalyse
+    },
+    postprocess (imgToAnalyse) {
+      imgToAnalyse.width = imgToAnalyse.oldWidth
+      imgToAnalyse.height = imgToAnalyse.oldHeight
+      return imgToAnalyse
+    },
+    launchSqueezenet: async function () {
       const math = new NDArrayMathGPU()
       const squeezeNet = new SqueezeNet(math)
       this.bananaResult = 'loading_lib'
       await squeezeNet.load()
-
+      return squeezeNet
+    },
+    analyzeImage: async function (imgToAnalyse, squeezeNet) {
       const image = Array3D.fromPixels(imgToAnalyse)
       const logits = squeezeNet.predict(image)
       const topResults = await squeezeNet.getTopKClasses(logits, 30)
 
-      for (const className in topResults) {
-        console.log(`${topResults[className].toFixed(5)}: ${className}`)
-      }
-      this.topResults = topResults
-      this.isThatABanana()
+      return topResults
     },
     isThatABanana: function () {
       const resultNames = Object.keys(this.topResults)
@@ -63,35 +105,18 @@ export default {
       } else {
         this.bananaResult = 'no_banana'
       }
-    },
-    onDrop: function (dropZone) {
-      dropZone.stopPropagation()
-      dropZone.preventDefault()
-      const files = dropZone.dataTransfer.files
-      this.createFile(files[0])
-    },
-    onChange (dropZone) {
-      const files = dropZone.target.files
-      this.createFile(files[0])
-    },
-    createFile (file) {
-      if (!file.type.match('image.*')) {
-        alert('Select an image')
-        return
-      }
-      var reader = new FileReader()
-      var vm = this
-
-      reader.onload = function (imageDropped) {
-        vm.imageSource = imageDropped.target.result
-      }
-      reader.readAsDataURL(file)
-      this.executeAnalyse()
     }
   }
 }
 </script>
 
 <style scoped>
+
+.drop-zone {
+  display: inline-flex;
+  min-width: 400px;
+  min-height: 200px;
+  border: dashed black 3px;
+}
 
 </style>
