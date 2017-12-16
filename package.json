@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "deeplearn": "^0.3.12",
+    "deeplearn-squeezenet": "^0.1.6",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
