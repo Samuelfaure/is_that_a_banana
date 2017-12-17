@@ -1,0 +1,33 @@
+// colors
+$color-white: #fff;
+$color-black: #000000;
+$color-light-gray: #c0c9cc;
+$color-lighter-gray: #EBEBEB;
+$color-darker-red: #990000;
+$color-dark-yellow: #D7B30B;
+
+// font-size
+$fs-small: .875rem;
+$fs-normal: 1rem;
+$fs-medium: 1.125rem;
+$fs-large: 1.25rem;
+
+// font-weight
+$fw-regular:  400;
+$fw-bold:     700;
+
+// media queries
+$desktop: 1000px;
+$tablet: 600px;
+$mobile: 480px;
+
+// links
+$link-color: $color-white;
+
+// borders
+$border-color: $color-black;
+$border-radius: 2px;
+
+// navigation
+$nav-height: 50px;
+$footer-height: 200px;

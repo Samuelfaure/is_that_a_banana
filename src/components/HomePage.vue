@@ -1,10 +1,18 @@
 <template>
   <div>
-    <h1>Is that a banana ?</h1>
+    <h1>Is that a banana ?<img id="banana-icon" src="src/assets/icons/banana64.png"></img></h1>
+    <h4>drag-and-drop your image in this box</h4>
     <div class="drop-zone" @dragover.prevent @drop="onDrop">
       <img id="img-to-analyse" ref="toAnalyse" :src=imageSource></img>
     </div>
-    <result v-if="bananaResult"></result>
+    <result id="result" v-if="bananaResult"></result>
+    <h4>How does it work ?</h4>
+    <p>
+      This website generates a deep-learning cluster in your browser<br>
+      to tell you if your image is an image of a banana.<br>
+      Deep-learning technology is still experimental, so please don't<br>
+      take banana-related decisions based on this website's conclusions.
+    </p>
   </div>
 </template>
 
@@ -110,13 +118,31 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+h1, h4, h6, p {
+  padding: 0.3em 0 0.3em 0;
+}
 
 .drop-zone {
+  background-color: $color-white;
   display: inline-flex;
+  justify-content: center;
+
   min-width: 400px;
   min-height: 200px;
+  margin: 0.5em 0 0.5em 0;
+
   border: dashed black 3px;
+}
+
+// #img-to-analyze {
+//   margin: auto 0;
+//   justify: center;
+// }
+
+#result {
+  margin-bottom: 1em;
 }
 
 </style>

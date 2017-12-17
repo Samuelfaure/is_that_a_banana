@@ -1,0 +1,14 @@
+@mixin breakpoint($point) {
+    @media (max-width: $point) { @content; }
+}
+
+// @mixin total-width-page-divided-by($number) {
+//   width: ($desktop / $number);
+//
+//   @include breakpoint($desktop) {
+//     width: ($tablet / $number);
+//   }
+//   @include breakpoint($desktop) {
+//     width: ($mobile / $number);
+//   }
+// }

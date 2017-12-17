@@ -1,0 +1,32 @@
+@import '_variables.scss';
+@import '_typography.scss';
+
+$button-color-dark: darken($color-dark-yellow, 3);
+
+.button {
+  font-family: 'Evolventa', 'Century Gothic', sans-serif;
+  background: $color-dark-yellow;
+  border: 0;
+  border-bottom: 2px solid $button-color-dark;
+  border-radius: $border-radius;
+  box-shadow: 0 1px 0 0 $button-color-dark;
+  color: $text-color-light;
+  font-size: 1em;
+  padding: .8em 2em;
+  vertical-align: middle;
+  transition: all 0.3s;
+  display: inline-block;
+  position: relative;
+
+  &:active {
+    top: 1px;
+    box-shadow: none;
+  }
+}
+
+.transparent-button {
+  background: 0;
+  border: 0;
+  outline: 0;
+  font-size: 1em;
+}

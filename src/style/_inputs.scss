@@ -1,0 +1,10 @@
+@import '_variables.scss';
+
+input {
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: .5em .8em;
+  font-size: 1em;
+  font-family: 'Source Sans Pro', Arial, sans-serif;
+  vertical-align: middle;
+}

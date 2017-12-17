@@ -1,0 +1,59 @@
+@import '_mixins.scss';
+@import '_variables.scss';
+
+$font-path: '../assets/fonts/';
+
+@font-face {
+  font-family: "Roboto";
+  src: url($font_path +"Roboto/Roboto-Medium.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url($font_path +"Roboto/Roboto-Bold.ttf");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url($font_path +"Roboto/Roboto-Italic.ttf");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Raleway";
+  src: url($font_path +"Raleway/Raleway-Bold.ttf");
+  font-weight: 800;
+}
+
+body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+  font-size: 16px;
+  line-height: 1.5em;
+  -webkit-font-smoothing: antialiased;
+
+  @include breakpoint($mobile) {
+    // font-size: 30px;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Raleway', sans-serif;
+  line-height: 1.3em;
+  color: $color-white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+h1 {
+  font-size: 64px;
+}
+
+p {
+  color: $color-white;
+}
+
+$title-color: $color-white;
+$title-color-light: $color-white;
+$text-color: $color-white;
+$text-color-light: $color-white;

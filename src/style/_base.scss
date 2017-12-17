@@ -1,0 +1,32 @@
+@import '_mixins.scss';
+@import '_variables.scss';
+@import '_typography.scss';
+
+body {
+  // padding-top: $nav-height;
+  background-color: $color-darker-red;
+  padding-bottom: $footer-height;
+  text-align: center;
+}
+
+a {
+  outline: none;
+
+  &:visited {
+    color: currentColor;
+  }
+}
+
+.container {
+  margin: 0 auto;
+  position: relative;
+  width: $desktop;
+
+  @include breakpoint($desktop) {
+    width: auto;
+  }
+}
+
+.light-text {
+  color: $title-color-light;
+}
