@@ -1,6 +1,6 @@
 # Is that a banana ?
-![banana](https://github.com/Samuelfaure/is_that_a_banana/blob/master/src/assets/icons/banana64.png) \
-![banana](https://github.com/Samuelfaure/is_that_a_banana/blob/master/src/assets/icons/banana64.png) \
+![banana](https://github.com/Samuelfaure/is_that_a_banana/blob/master/src/assets/icons/banana64.png)
+![banana](https://github.com/Samuelfaure/is_that_a_banana/blob/master/src/assets/icons/banana64.png)
 ![banana](https://github.com/Samuelfaure/is_that_a_banana/blob/master/src/assets/icons/banana64.png)
 
 How many times did you want to eat a delicious banana just to realize it was
