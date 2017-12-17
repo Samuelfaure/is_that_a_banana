@@ -3,6 +3,10 @@
     <h1>Is that a banana ?<img id="banana-icon" src="../assets/icons/banana64.png"></img></h1>
     <h4>drag-and-drop your image in this box</h4>
     <div class="drop-zone" @dragover.prevent @drop="onDrop">
+      <label class="button" v-if="!imageSource">
+        Select an image
+        <input type="file" name="image" @change="onChange">
+      </label>
       <img id="img-to-analyse" ref="toAnalyse" :src=imageSource></img>
     </div>
     <result id="result" v-if="bananaResult"></result>
@@ -43,6 +47,11 @@ export default {
       this.createFile(files[0])
       this.executeAnalyse()
     },
+    onChange (button) {
+      var files = button.target.files
+      this.createFile(files[0])
+      this.executeAnalyse()
+    },
     createFile (file) {
       if (!file.type.match('image.*')) {
         alert('Please select an image. Preferably of banana.')
@@ -63,10 +72,6 @@ export default {
       imgToAnalyse = this.preprocess(imgToAnalyse)
       const topResults = await this.analyzeImage(imgToAnalyse, squeezeNet)
       imgToAnalyse = this.postprocess(imgToAnalyse)
-
-      // for (const className in topResults) {
-      //   console.log(`${topResults[className].toFixed(5)}: ${className}`)
-      // }
 
       this.topResults = topResults
       this.isThatABanana()
@@ -129,17 +134,18 @@ h1, h4, h6, p {
   display: inline-flex;
   justify-content: center;
 
-  min-width: 400px;
+  min-width: 300px;
   min-height: 200px;
   margin: 0.5em 0 0.5em 0;
 
   border: dashed black 3px;
 }
 
-// #img-to-analyze {
-//   margin: auto 0;
-//   justify: center;
-// }
+input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
 
 #result {
   margin-bottom: 1em;

@@ -4,23 +4,30 @@
 $button-color-dark: darken($color-dark-yellow, 3);
 
 .button {
-  font-family: 'Evolventa', 'Century Gothic', sans-serif;
+  border: 2px solid black;
+  font-family: 'Raleway', sans-serif;
   background: $color-dark-yellow;
-  border: 0;
-  border-bottom: 2px solid $button-color-dark;
-  border-radius: $border-radius;
+  color: $color-white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  min-height: 60px;
+  min-width: 160px;
+  margin: auto 0;
+
   box-shadow: 0 1px 0 0 $button-color-dark;
-  color: $text-color-light;
   font-size: 1em;
-  padding: .8em 2em;
-  vertical-align: middle;
+  justify: center;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s;
-  display: inline-block;
-  position: relative;
+  display: flex;
 
   &:active {
     top: 1px;
     box-shadow: none;
+  }
+
+  &:hover {
+    background-color: darken($color-dark-yellow, 6);
   }
 }
 
