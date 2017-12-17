@@ -3,7 +3,7 @@
     <div class="container">
       <h4>
         Made with love by Samuel Faure
-        <a href="https://github.com/Samuelfaure" ><img src="src/assets/icons/github.svg" width=23></img></a>
+        <a href="https://github.com/Samuelfaure" ><img src="../assets/icons/github.svg" width=23></img></a>
       </h4>
     </div>
   </footer>

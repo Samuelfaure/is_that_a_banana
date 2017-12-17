@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Is that a banana ?<img id="banana-icon" src="src/assets/icons/banana64.png"></img></h1>
+    <h1>Is that a banana ?<img id="banana-icon" src="../assets/icons/banana64.png"></img></h1>
     <h4>drag-and-drop your image in this box</h4>
     <div class="drop-zone" @dragover.prevent @drop="onDrop">
       <img id="img-to-analyse" ref="toAnalyse" :src=imageSource></img>
