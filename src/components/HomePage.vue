@@ -91,6 +91,11 @@ export default {
     postprocess (imgToAnalyse) {
       imgToAnalyse.width = imgToAnalyse.oldWidth
       imgToAnalyse.height = imgToAnalyse.oldHeight
+
+      while (imgToAnalyse.width > 300 || imgToAnalyse.height > 300) {
+        imgToAnalyse.width /= 1.1
+        imgToAnalyse.height /= 1.1
+      }
       return imgToAnalyse
     },
     launchSqueezenet: async function () {
