@@ -5,6 +5,7 @@ $button-color-dark: darken($color-dark-yellow, 3);
 
 .button {
   border: 2px solid black;
+  border-radius: 5px;
   font-family: 'Raleway', sans-serif;
   background: $color-dark-yellow;
   color: $color-white;

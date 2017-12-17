@@ -15,7 +15,8 @@
       This website generates a deep-learning cluster in your browser<br>
       to tell you if your image is an image of a banana.<br>
       Deep-learning technology is still experimental, so please don't<br>
-      take banana-related decisions based on this website's conclusions.
+      take banana-related decisions based on this website's conclusions.<br><br>
+      Since the cluster use your GPU, this works better on a computer than on mobile !
     </p>
   </div>
 </template>
@@ -93,8 +94,8 @@ export default {
       imgToAnalyse.height = imgToAnalyse.oldHeight
 
       while (imgToAnalyse.width > 300 || imgToAnalyse.height > 300) {
-        imgToAnalyse.width /= 1.1
-        imgToAnalyse.height /= 1.1
+        imgToAnalyse.width /= 2
+        imgToAnalyse.height /= 2
       }
       return imgToAnalyse
     },
