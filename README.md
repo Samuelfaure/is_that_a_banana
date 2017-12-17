@@ -15,6 +15,8 @@ Live demo [here](http://www.isthatabanana.com/).
 
 Use [deeplearn.js](https://github.com/PAIR-code/deeplearnjs) with SqueezeNet.
 
+The banana icon is courtesy of [EmojiOne](https://www.emojione.com/)
+
 #### Licence :
 
 MIT
