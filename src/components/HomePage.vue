@@ -25,14 +25,14 @@
 </template>
 
 <script>
-import { NDArrayMathGPU, Array3D } from 'deeplearn'
-import { SqueezeNet } from 'deeplearn-squeezenet'
 import Filters from '@/mixins/filters'
+import ImgMethods from '@/mixins/imgMethods'
+import SqueezeMethods from '@/mixins/squeezenetMethods'
 import Result from '@/components/Result'
 
 export default {
   name: 'HomePage',
-  mixins: [Filters],
+  mixins: [Filters, ImgMethods, SqueezeMethods],
   components: {
     'Result': Result
   },
@@ -70,79 +70,6 @@ export default {
       }
       reader.readAsDataURL(file)
       this.executeAnalyse()
-    },
-    isImageValid (file) {
-      if (!file.type.match('image.*')) {
-        alert('Please select an image. Preferably of banana.')
-        return false
-      }
-      return true
-    },
-    deleteImage: function () {
-      this.imageSource = ''
-      this.bananaResult = ''
-    },
-    executeAnalyse: async function () {
-      let imgToAnalyse = await this.$refs.toAnalyse
-
-      imgToAnalyse = this.preprocess(imgToAnalyse)
-      const squeezeNet = await this.launchSqueezenet(imgToAnalyse)
-
-      const topResults = await this.analyzeImage(imgToAnalyse, squeezeNet)
-      // this.postprocess(imgToAnalyse)
-
-      this.topResults = topResults
-      this.isThatABanana()
-    },
-    preprocess (imgToAnalyse) {
-      // imgToAnalyse = this.saveImgFormat(imgToAnalyse)
-
-      imgToAnalyse.width = 227
-      imgToAnalyse.height = 227
-      return imgToAnalyse
-    },
-    saveImgFormat (imgToAnalyse) {
-      imgToAnalyse.oldWidth = imgToAnalyse.width
-      imgToAnalyse.oldHeight = imgToAnalyse.height
-      return imgToAnalyse
-    },
-    postprocess (imgToAnalyse) {
-      let widthToDisplay = imgToAnalyse.oldWidth
-      let heightToDisplay = imgToAnalyse.oldHeight
-
-      while (widthToDisplay > 300 || heightToDisplay > 500) {
-        widthToDisplay /= 1.2
-        heightToDisplay /= 1.2
-      }
-
-      this.$refs.toAnalyse = widthToDisplay
-      this.$refs.toAnalyse = heightToDisplay
-    },
-    launchSqueezenet: async function () {
-      const math = new NDArrayMathGPU()
-      const squeezeNet = new SqueezeNet(math)
-      this.bananaResult = 'loading_lib'
-      await squeezeNet.load()
-      return squeezeNet
-    },
-    analyzeImage: async function (imgToAnalyse, squeezeNet) {
-      const image = Array3D.fromPixels(imgToAnalyse)
-      const logits = squeezeNet.predict(image)
-      const topResults = squeezeNet.getTopKClasses(logits, 30)
-
-      return topResults
-    },
-    isThatABanana: function () {
-      const resultNames = Object.keys(this.topResults)
-      const resultNamesFirst10 = resultNames.slice(0, 10)
-
-      if (resultNamesFirst10.includes('banana')) {
-        this.bananaResult = 'yes_banana'
-      } else if (resultNames.includes('banana')) {
-        this.bananaResult = 'maybe_banana'
-      } else {
-        this.bananaResult = 'no_banana'
-      }
     }
   }
 }

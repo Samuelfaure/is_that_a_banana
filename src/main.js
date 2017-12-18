@@ -12,6 +12,20 @@ require('@/style/app.scss')
 new Vue({
   el: '#app',
   router,
+  data: {
+    ranking_maybe: 100,
+    ranking_confirmed: 50
+  },
   template: '<App/>',
   components: { App }
+})
+
+// Small store to hold the constant values
+// A banana is maybe recognized if its ranking is >= ranking_maybe
+// It is definitely recognized if its ranking is >= ranking_confirmed
+export const constants = new Vue({
+  data: {
+    ranking_maybe: 100,
+    ranking_confirmed: 50
+  }
 })
