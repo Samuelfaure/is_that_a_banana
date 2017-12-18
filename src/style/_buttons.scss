@@ -14,13 +14,12 @@ $button-color-dark: darken($color-dark-yellow, 3);
   min-width: 160px;
   margin: auto 0;
 
-  box-shadow: 0 1px 0 0 $button-color-dark;
   font-size: 1em;
   justify: center;
   align-items: center;
   justify-content: center;
   transition: all 0.3s;
-  display: flex;
+  display: inline-flex;
 
   &:active {
     top: 1px;

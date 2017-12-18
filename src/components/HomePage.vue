@@ -5,11 +5,14 @@
     <div class="drop-zone" @dragover.prevent @drop="onDrop">
       <label class="button" v-if="!imageSource">
         Select an image
-        <input type="file" name="image" @change="onChange">
+        <input type="file" @change="onChange">
       </label>
-      <img id="img-to-analyse" ref="toAnalyse" :src=imageSource></img>
+      <img ref="toAnalyse" :src=imageSource v-bind:class="{ hidden: !imageSource }"></img>
     </div>
     <result id="result" v-if="bananaResult"></result>
+    <button class="button" id="tryAgain" v-if="imageSource" @click="deleteImage">
+      Try again
+    </button>
     <h4>How does it work ?</h4>
     <p>
       This website generates a deep-learning cluster in your browser<br>
@@ -45,59 +48,75 @@ export default {
       dropZone.stopPropagation()
       dropZone.preventDefault()
       const files = dropZone.dataTransfer.files
-      this.createFile(files[0])
-      this.executeAnalyse()
+      this.analyseInput(files)
     },
-    onChange (button) {
-      var files = button.target.files
-      this.createFile(files[0])
-      this.executeAnalyse()
+    onChange: function (button) {
+      const files = button.target.files
+      this.analyseInput(files)
     },
-    createFile (file) {
-      if (!file.type.match('image.*')) {
-        alert('Please select an image. Preferably of banana.')
+    analyseInput (files) {
+      const firstFile = files[0]
+      if (!this.isImageValid(firstFile)) {
         return
       }
-      var reader = new FileReader()
-      var vm = this
+      this.readFile(firstFile)
+    },
+    readFile (file) {
+      const reader = new FileReader()
+      const vm = this
 
-      reader.onload = function (imageDropped) {
-        vm.imageSource = imageDropped.target.result
+      reader.onload = function (event) {
+        vm.imageSource = event.target.result
       }
       reader.readAsDataURL(file)
+      this.executeAnalyse()
+    },
+    isImageValid (file) {
+      if (!file.type.match('image.*')) {
+        alert('Please select an image. Preferably of banana.')
+        return false
+      }
+      return true
+    },
+    deleteImage: function () {
+      this.imageSource = ''
+      this.bananaResult = ''
     },
     executeAnalyse: async function () {
-      let imgToAnalyse = this.$refs.toAnalyse
-      const squeezeNet = await this.launchSqueezenet(imgToAnalyse)
+      let imgToAnalyse = await this.$refs.toAnalyse
 
       imgToAnalyse = this.preprocess(imgToAnalyse)
+      const squeezeNet = await this.launchSqueezenet(imgToAnalyse)
+
       const topResults = await this.analyzeImage(imgToAnalyse, squeezeNet)
-      imgToAnalyse = this.postprocess(imgToAnalyse)
+      // this.postprocess(imgToAnalyse)
 
       this.topResults = topResults
       this.isThatABanana()
     },
     preprocess (imgToAnalyse) {
-      imgToAnalyse = this.resetImgFormat(imgToAnalyse)
+      // imgToAnalyse = this.saveImgFormat(imgToAnalyse)
 
       imgToAnalyse.width = 227
       imgToAnalyse.height = 227
       return imgToAnalyse
     },
-    resetImgFormat (imgToAnalyse) {
-      imgToAnalyse.oldWidth = imgToAnalyse.naturalWidth
-      imgToAnalyse.oldHeight = imgToAnalyse.naturalHeight
+    saveImgFormat (imgToAnalyse) {
+      imgToAnalyse.oldWidth = imgToAnalyse.width
+      imgToAnalyse.oldHeight = imgToAnalyse.height
       return imgToAnalyse
     },
     postprocess (imgToAnalyse) {
-      imgToAnalyse.width = imgToAnalyse.oldWidth
-      imgToAnalyse.height = imgToAnalyse.oldHeight
+      let widthToDisplay = imgToAnalyse.oldWidth
+      let heightToDisplay = imgToAnalyse.oldHeight
 
-      while (imgToAnalyse.width > 300 || imgToAnalyse.height > 300) {
-        imgToAnalyse.width /= 2
-        imgToAnalyse.height /= 2
+      while (widthToDisplay > 300 || heightToDisplay > 500) {
+        widthToDisplay /= 1.2
+        heightToDisplay /= 1.2
       }
-      return imgToAnalyse
+
+      this.$refs.toAnalyse = widthToDisplay
+      this.$refs.toAnalyse = heightToDisplay
     },
     launchSqueezenet: async function () {
       const math = new NDArrayMathGPU()
@@ -109,7 +128,7 @@ export default {
     analyzeImage: async function (imgToAnalyse, squeezeNet) {
       const image = Array3D.fromPixels(imgToAnalyse)
       const logits = squeezeNet.predict(image)
-      const topResults = await squeezeNet.getTopKClasses(logits, 30)
+      const topResults = squeezeNet.getTopKClasses(logits, 30)
 
       return topResults
     },
@@ -155,6 +174,11 @@ input[type="file"] {
 
 #result {
   margin-bottom: 1em;
+}
+
+#tryAgain {
+  display: block;
+  margin: 0 auto;
 }
 
 </style>
